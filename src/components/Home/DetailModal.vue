@@ -1,181 +1,127 @@
 <template>
-  <div class="post" v-show="show">
+  <div class="suggestion-box">
     <fa-icon class="x" @click="close" icon="fa-solid fa-xmark fa-2xl" />
-    <p>
-      <input
-        id="author"
-        class="post-author"
-        placeholder="Nome completo"
-        v-model="newSuggestion.author"
-      />
-      <input
-        class="author-age"
-        placeholder="idade"
-        type="number"
-        min="1"
-        v-model="newSuggestion.age"
-      />
-    </p>
-    <div class="post-content-score-box">
-      <p>
-        <input
-          type="number"
-          min="0"
-          max="10"
-          class="post-score"
-          placeholder="nota"
-          v-model="newSuggestion.score"
-        />
-      </p>
-      <div>
-        <textarea class="content" v-model="newSuggestion.content" />
-      </div>
+    <div class="top">
+      <span id="author" class="normal">{{ suggestion.author }}</span>
+      <span id="score" class="normal">
+        experiência Warren:
+        {{ suggestion.score }}
+      </span>
     </div>
-    <button @click="creatSuggestion">Confirmar</button>
+    <div class="middle">
+      <span>dia: {{ suggestion.day }}</span>
+      <span>mês: {{ suggestion.mounth }}</span>
+      <span>ano: {{ suggestion.year }}</span>
+    </div>
+    <div class="content">{{ suggestion.content }}</div>
+    <div
+      v-for="comment in suggestion.comments"
+      :key="comment.id"
+      class="comments-box"
+    >
+      <span>{{ comment.commentator }}</span>
+      <hr />
+      <p>{{ comment.text }}</p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Emit, Prop } from "vue-property-decorator";
-import axios from "axios";
-const date = new Date();
-
 @Component({})
-export default class RegisterModal extends Vue {
+export default class DatailModal extends Vue {
   @Prop({
-    type: Boolean,
+    type: Object,
     required: true,
   })
-  public show!: boolean;
-  private newSuggestion = {
-    author: "",
-    age: "",
-    score: "",
-    content: "",
-    hour: date.getHours(),
-    day: date.getDay(),
-    mounth: date.getMonth(),
-    year: date.getFullYear(),
-    comments: [{}],
-  };
-  @Emit("registered")
-  public getComments() {
+  public suggestion!: object;
+
+  @Emit("close")
+  public closeDetail() {
     return;
   }
-  async creatSuggestion(): Promise<void> {
-    try {
-      const res = axios.post(`http://localhost:3001/posts`, this.newSuggestion);
-      this.close();
-      window.location.reload();
-    } catch (err) {
-      console.error();
-    }
-  }
   close() {
-    this.$emit("close");
+    this.closeDetail();
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.post-box {
-  width: 100%;
-  height: auto;
-}
-.post {
-  animation-name: letsStart;
-  animation-duration: 0.5s;
-  animation-fill-mode: forwards;
+.suggestion-box {
   background-color: rgb(255, 37, 91);
+  width: 50%;
+  min-height: 32vh;
   height: auto;
   text-align: left;
   border-radius: 15px;
   box-sizing: content-box;
-  padding: 1rem 1.5rem 1rem 1.5rem;
-  position: fixed;
+  padding: 1rem 1.5rem 2rem 1.5rem;
+  margin: -30vh 0 5vh 23%;
+  position: absolute;
   box-shadow: 0 0 0 1000vw rgba(0, 0, 0, 0.517);
+  z-index: 1;
   .x {
     margin-left: 100%;
     color: white;
     cursor: pointer;
   }
 }
-.post-author {
-  animation-name: authorStart;
-  animation-duration: 0.5s;
-  animation-fill-mode: forwards;
+.normal {
   background-color: white;
   padding: 0.5em;
+  float: left;
   margin-right: 1vw;
   font-size: 1.5rem;
   border-radius: 12px;
+  width: auto;
+  position: absolute;
 }
-.author-age {
+#score {
+  background-color: bisque;
+  font-size: calc(0.7vw + 0.7vh);
+  margin-top: 8vh;
+  position: absolute;
+}
+#author {
+  min-width: 12vw;
+}
+#text {
+  margin-top: 12vh;
+}
+.middle {
   background-color: white;
   padding: 0.5em;
+  float: right;
   margin-right: 1vw;
   font-size: 1.5rem;
   border-radius: 12px;
-  width: 10%;
+  width: auto;
+  span {
+    margin-left: 1rem;
+  }
 }
-.post-content-score-box {
-  width: 97%;
+.content {
+  min-width: 90%;
   height: auto;
-  min-height: 32vh;
-  max-height: 40.5vh;
   background-color: white;
+  padding: 0.5em;
+  font-size: calc(1vw + 1vh);
   border-radius: 12px;
-  padding-left: 1em;
-  padding-top: 0.5em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 2vh;
-  p {
-    background-color: bisque;
-    text-align: center;
-    border: solid rgb(255, 187, 0) 1px;
-    border-radius: 12px;
-    width: auto;
-    max-width: 6em;
-    padding: 0.5rem;
-    input {
-      width: 80%;
-      font-size: 120%;
-      border-radius: 5px;
-      background-color: rgb(255, 255, 255);
-      border: none;
-      outline: none;
-    }
-  }
-  div {
-    font-size: 150%;
-    .content {
-      outline: none;
-      width: 95%;
-      max-height: 30vh;
-      min-height: 20vh;
-      padding: 1rem;
-      font-size: clamp(1rem, 1vw + 1vh, 4em);
-    }
-  }
+  margin-top: 15vh;
+  margin-bottom: 5vh;
+  word-break: break-all;
 }
 
-@keyframes letsStart {
-  from {
-    width: 30%;
-    margin: 20vh 0 0vh 80%;
-  }
-  to {
-    width: 50%;
-    margin: -50vh 0 0vh 24%;
-  }
-}
-@keyframes authorStart {
-  from {
-    width: 10%;
-  }
-  to {
-    width: 50%;
+.comments-box {
+  background-color: white;
+  width: auto;
+  padding: 0.5rem;
+  margin: 1rem 0 0 0;
+  border-radius: 12px;
+  span {
+    border: solid rgba(129, 129, 129, 0.463) 0.1px;
+    border-radius: 12px;
+    padding: 0.2rem;
   }
 }
 </style>
