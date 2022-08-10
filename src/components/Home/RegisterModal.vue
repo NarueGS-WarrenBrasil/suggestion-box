@@ -5,7 +5,7 @@
       <input
         id="author"
         class="post-author"
-        placeholder="Nome completo"
+        placeholder="Seu nome"
         v-model="newSuggestion.author"
       />
       <input
@@ -56,7 +56,7 @@ export default class RegisterModal extends Vue {
     day: date.getDay(),
     mounth: date.getMonth(),
     year: date.getFullYear(),
-    comments: [{}],
+    comments: [],
   };
   @Emit("registered")
   public getComments() {
@@ -66,7 +66,6 @@ export default class RegisterModal extends Vue {
     try {
       const res = axios.post(`http://localhost:3001/posts`, this.newSuggestion);
       this.close();
-      window.location.reload();
     } catch (err) {
       console.error();
     }
@@ -78,10 +77,6 @@ export default class RegisterModal extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.post-box {
-  width: 100%;
-  height: auto;
-}
 .post {
   animation-name: letsStart;
   animation-duration: 0.5s;
@@ -125,8 +120,7 @@ export default class RegisterModal extends Vue {
   max-height: 40.5vh;
   background-color: white;
   border-radius: 12px;
-  padding-left: 1em;
-  padding-top: 0.5em;
+  padding: 1rem;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 2vh;
@@ -148,10 +142,9 @@ export default class RegisterModal extends Vue {
     }
   }
   div {
-    font-size: 150%;
     .content {
       outline: none;
-      width: 95%;
+      width: 96%;
       max-height: 30vh;
       min-height: 20vh;
       padding: 1rem;
