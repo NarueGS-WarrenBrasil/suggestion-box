@@ -1,0 +1,41 @@
+{
+  "posts": [
+    {
+      "author": "Avelino",
+      "age": "1",
+      "score": "2",
+      "content": "aaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "hour": 14,
+      "day": 3,
+      "mounth": 7,
+      "year": 2022,
+      "comments": [
+        {
+          "commentator": "Vivaldo Cotrim",
+          "text": "dindin"
+        },
+        {
+          "commentator": "Vivaldo Cotrim",
+          "text": "aaa"
+        },
+        {
+          "commentator": "Avelino",
+          "text": "aaaaaaa"
+        }
+      ],
+      "id": 1
+    },
+    {
+      "author": "Naruê Gonçalves Santos",
+      "age": "1",
+      "score": "2",
+      "content": "aaaaaaaaa",
+      "hour": 14,
+      "day": 3,
+      "mounth": 7,
+      "year": 2022,
+      "comments": [],
+      "id": 2
+    }
+  ]
+}
