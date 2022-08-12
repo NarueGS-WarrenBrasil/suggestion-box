@@ -24,12 +24,12 @@ div {
   position: fixed;
   min-width: 100%;
   height: auto;
+  padding: 1rem 0 1rem 2rem;
   background-color: rgba(0, 0, 0, 0.512);
   .logo {
     width: 4vw;
-    height: 4vw;
+    height: auto;
     float: left;
-    margin-left: 2rem;
     opacity: 50%;
   }
 }
