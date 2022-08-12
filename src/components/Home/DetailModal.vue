@@ -101,7 +101,7 @@ export default class DatailModal extends Vue {
   }
 }
 .content {
-  min-width: 90%;
+  min-width: 80%;
   height: auto;
   background-color: white;
   padding: 0.5em;
@@ -115,6 +115,7 @@ export default class DatailModal extends Vue {
 .comments-box {
   background-color: white;
   width: auto;
+  max-width: 60%;
   padding: 0.5rem;
   margin: 1rem 0 0 0;
   border-radius: 12px;
@@ -122,6 +123,9 @@ export default class DatailModal extends Vue {
     border: solid rgba(129, 129, 129, 0.463) 0.1px;
     border-radius: 12px;
     padding: 0.2rem;
+  }
+  p {
+    width: auto;
   }
 }
 </style>
