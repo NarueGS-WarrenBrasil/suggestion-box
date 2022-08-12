@@ -1,5 +1,5 @@
 <template>
-  <div class="post" v-show="show">
+  <div class="post">
     <fa-icon class="x" @click="close" icon="fa-solid fa-xmark fa-2xl" />
     <p>
       <input
@@ -31,8 +31,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from "vue-property-decorator";
-import axios from "axios";
+import { Component, Vue, Prop, Watch, Emit } from "vue-property-decorator";
+import suggestionService from "@/services/suggestionService";
 @Component({})
 export default class EditModal extends Vue {
   @Prop({
@@ -49,17 +49,22 @@ export default class EditModal extends Vue {
     this.updatedSuggestion = this.currentSuggestion;
     this.show = true;
   }
-  close() {
-    this.show = false;
-    this.$emit("closed");
+  @Emit("edited")
+  public getComments() {
+    return;
+  }
+  @Emit("close")
+  public close() {
+    return;
   }
   async editSuggestion(id: number, suggestion: object): Promise<void> {
     try {
-      await axios.put(`http://localhost:3001/posts/${id}`, suggestion);
+      suggestionService.put(id, suggestion);
       this.close();
-      this.$emit("edited");
     } catch (e) {
       console.error(e);
+    } finally {
+      this.getComments();
     }
   }
 }
