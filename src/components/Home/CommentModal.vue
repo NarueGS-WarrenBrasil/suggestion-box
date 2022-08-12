@@ -18,8 +18,7 @@
 
 <script lang="ts">
 import { Component, Vue, Emit, Prop } from "vue-property-decorator";
-import axios from "axios";
-import suggestionService from "@/services/suggestionService";
+import commentService from "@/services/commentService";
 @Component({})
 export default class CommentModal extends Vue {
   @Prop({
@@ -52,10 +51,15 @@ export default class CommentModal extends Vue {
     id: number,
     target: object
   ): Promise<void> {
-    comments.push(comment);
-    await suggestionService.put(id, target);
-    this.clean();
-    this.closeComment();
+    try {
+      commentService.add(comments, comment, id, target);
+      this.clean();
+      this.closeComment();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      window.location.reload();
+    }
   }
 }
 </script>
