@@ -19,7 +19,7 @@
 <script lang="ts">
 import { Component, Vue, Emit, Prop } from "vue-property-decorator";
 import axios from "axios";
-
+import suggestionService from "@/services/suggestionService";
 @Component({})
 export default class CommentModal extends Vue {
   @Prop({
@@ -49,12 +49,12 @@ export default class CommentModal extends Vue {
   async addComment(
     comments: object[],
     comment: object,
-    mainId: number,
+    id: number,
     target: object
   ): Promise<void> {
     comments.push(comment);
-    await axios.put(`http://localhost:3001/posts/${mainId}`, target);
-    window.location.reload();
+    await suggestionService.put(id, target);
+    this.clean();
     this.closeComment();
   }
 }
