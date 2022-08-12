@@ -10,21 +10,23 @@
       />
       <input
         class="author-age"
+        maxlength="3"
         placeholder="idade"
-        type="number"
         min="1"
+        v-maska="'###'"
         v-model="newSuggestion.age"
       />
     </p>
     <div class="post-content-score-box">
       <p>
         <input
-          type="number"
           min="0"
           max="10"
+          maxlength="2"
           class="post-score"
           placeholder="nota"
           v-model="newSuggestion.score"
+          v-maska="'###'"
         />
       </p>
       <div>
@@ -37,7 +39,9 @@
 
 <script lang="ts">
 import { Component, Vue, Emit, Prop } from "vue-property-decorator";
+import suggestionService from "@/services/suggestionService";
 import axios from "axios";
+import validations from "@/utils/validations";
 const date = new Date();
 
 @Component({})
@@ -64,14 +68,33 @@ export default class RegisterModal extends Vue {
   }
   async creatSuggestion(): Promise<void> {
     try {
-      const res = axios.post(`http://localhost:3001/posts`, this.newSuggestion);
-      this.close();
+      if (
+        validations.numValidation(
+          this.newSuggestion.score,
+          this.newSuggestion.age
+        ) &&
+        this.newSuggestion.author != "" &&
+        this.newSuggestion.content != ""
+      ) {
+        const res = suggestionService.post(this.newSuggestion);
+        this.getComments();
+        this.close();
+      } else {
+        throw "inválido";
+      }
     } catch (err) {
-      console.error();
+      alert(err);
     }
   }
   close() {
+    this.clean();
     this.$emit("close");
+  }
+  clean(): void {
+    this.newSuggestion.author = "";
+    this.newSuggestion.age = "";
+    this.newSuggestion.score = "";
+    this.newSuggestion.content = "";
   }
 }
 </script>
@@ -102,7 +125,7 @@ export default class RegisterModal extends Vue {
   background-color: white;
   padding: 0.5em;
   margin-right: 1vw;
-  font-size: 1.5rem;
+  font-size: calc(1vw + 1vh);
   border-radius: 12px;
 }
 .author-age {
