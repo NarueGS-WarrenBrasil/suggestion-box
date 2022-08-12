@@ -10,9 +10,10 @@
       @registered="getComments"
     />
     <EditModal
+      v-show="edit"
       :currentSuggestion="editData"
       @edited="getComments"
-      @closed="getComments"
+      @close="closeEdit"
     />
     <CommentModal
       :post="commentData"
@@ -25,27 +26,29 @@
       v-show="detail"
       :suggestion="detailData"
     />
-    <div class="post" v-for="p in postList" :key="p.id">
-      <fa-icon class="more-buttom" icon="fa-solid fa-ellipsis" />
-      <div ref="op" class="more-options">
-        <li class="option" @click="editPost(p)">editar</li>
-        <li class="option" @click="deletePost(p.id)">deletar</li>
-        <a class="option" href="#" @click="detailSuggestion(p)">detalhes</a>
-      </div>
-      <p>
-        <span class="post-author">{{ p.author }}</span>
-      </p>
-      <div class="post-content-score-box">
-        <p>
-          <span class="post-score">{{ p.score }}</span>
-        </p>
-        <div>
-          <span>{{ p.content }}</span>
+    <div v-for="p in postList" :key="p.id">
+      <div class="post">
+        <fa-icon class="more-buttom" icon="fa-solid fa-ellipsis" />
+        <div ref="op" class="more-options">
+          <li class="option" @click="editPost(p)">editar</li>
+          <li class="option" @click="deletePost(p.id)">deletar</li>
+          <a class="option" href="#" @click="detailSuggestion(p)">detalhes</a>
         </div>
-      </div>
-      <div @click="toComment(p)" class="comment-bottom">
-        <fa-icon icon="fa-solid fa-comment-dots" />
-        {{ p.comments.length }}
+        <p>
+          <span class="post-author">{{ p.author }}</span>
+        </p>
+        <div class="post-content-score-box">
+          <p>
+            <span class="post-score">{{ p.score }}</span>
+          </p>
+          <div>
+            <span>{{ p.content }}</span>
+          </div>
+        </div>
+        <div @click="toComment(p)" class="comment-bottom">
+          <fa-icon icon="fa-solid fa-comment-dots" />
+          {{ p.comments.length }}
+        </div>
       </div>
     </div>
   </div>
@@ -53,7 +56,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import axios from "axios";
+import suggestionService from "@/services/suggestionService";
 import RegisterModal from "./RegisterModal.vue";
 import EditModal from "./EditModal.vue";
 import CommentModal from "./CommentModal.vue";
@@ -72,31 +75,39 @@ export default class PostBox extends Vue {
   register = false;
   comment = false;
   detail = false;
+  edit = false;
+  deleted = "";
   editData = {};
   commentData = {};
   detailData = {};
+  async created(): Promise<void> {
+    this.getComments();
+  }
   async getComments() {
     try {
-      const res = await axios.get(`http://localhost:3001/posts`);
+      const res = await suggestionService.get();
       this.postList = res.data;
     } catch (e) {
       console.error(e);
     }
   }
-
-  async created(): Promise<void> {
-    this.getComments();
-  }
-
   async deletePost(id: number): Promise<void> {
-    await axios.delete(`http://localhost:3001/posts/${id}`);
-    this.getComments();
+    try {
+      suggestionService.delete(id);
+      this.getComments();
+    } catch (e) {
+      console.error(e);
+    }
   }
   toSuggest(): void {
     this.register = true;
   }
   editPost(sugg: object) {
+    this.edit = true;
     this.editData = sugg;
+  }
+  closeEdit() {
+    this.edit = false;
   }
   @Watch("sinal")
   openRegister() {
@@ -175,13 +186,13 @@ export default class PostBox extends Vue {
 }
 .post {
   background-color: rgb(255, 37, 91);
-  width: 30%;
+  width: 30vw;
   height: auto;
   text-align: left;
   border-radius: 15px;
   box-sizing: content-box;
   margin: 5vh 0 5vh 34%;
-  padding: 1rem 1.5rem 1rem 1.5rem;
+  padding: 1vh 1.5vw 1vh 1.5vw;
   z-index: 1;
   .more-buttom {
     float: right;
@@ -196,7 +207,7 @@ export default class PostBox extends Vue {
   background-color: white;
   width: auto;
   padding: 0.5em;
-  font-size: 1.5rem;
+  font-size: calc(0.8vw + 0.8vh);
   border-radius: 12px;
   bottom: 12vh;
   top: 12vh;
@@ -204,17 +215,16 @@ export default class PostBox extends Vue {
 .post-content-score-box {
   width: 94.2%;
   height: auto;
-  min-height: 32vh;
-  max-height: 40.5vh;
+  max-height: 32vh;
+  font-size: calc(1vw + 1vh);
   background-color: white;
   border-radius: 12px;
-  padding: 0 1em 1.5em 1em;
+  padding: 0 1vw 2vh 1vw;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 2vh;
-  word-break: break-word;
+  word-break: break-all;
   p {
-    font-size: 200%;
     background-color: bisque;
     width: 2em;
     text-align: center;
@@ -222,7 +232,7 @@ export default class PostBox extends Vue {
     border-radius: 12px;
   }
   div {
-    font-size: 150%;
+    font-size: 120%;
   }
 }
 .comment-bottom {
@@ -251,6 +261,22 @@ export default class PostBox extends Vue {
     height: 3.5vh;
     padding: 0.5rem 0.1rem 0.5rem 0.1rem;
     cursor: pointer;
+  }
+}
+.true {
+  animation-name: del;
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes del {
+  from {
+    margin-left: 34%;
+    opacity: 100%;
+  }
+  to {
+    margin-left: 17%;
+    opacity: 10%;
   }
 }
 </style>
