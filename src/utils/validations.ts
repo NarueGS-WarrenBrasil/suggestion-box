@@ -7,8 +7,4 @@ export default {
       ? true
       : false;
   },
-  stringValidation: (str: string) => {
-    const reg = new RegExp("^([a-zA-Zà-úÀ-Ú])+$");
-    return reg.test(str) ? true : false;
-  },
 };
