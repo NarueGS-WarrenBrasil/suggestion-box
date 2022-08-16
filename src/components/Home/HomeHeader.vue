@@ -36,10 +36,6 @@ export default class Header extends Vue {}
   color: white;
 }
 
-// @keyframes carousel {
-//   25%{background-image: url("../../../public/navBackground.png");}
-//   50%
-// }
 .main-title {
   font-weight: 900;
   font-size: clamp(2rem, 2vw + 2vh, 6em);
