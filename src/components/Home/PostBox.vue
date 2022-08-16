@@ -223,7 +223,7 @@ export default class PostBox extends Vue {
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 2vh;
-  word-break: break-all;
+  word-break: break-word;
   p {
     background-color: bisque;
     width: 2em;
