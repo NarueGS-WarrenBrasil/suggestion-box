@@ -76,7 +76,7 @@ export default class RegisterModal extends Vue {
         this.newSuggestion.author != "" &&
         this.newSuggestion.content != ""
       ) {
-        const res = suggestionService.post(this.newSuggestion);
+        suggestionService.post(this.newSuggestion);
         this.getComments();
         this.close();
       } else {
