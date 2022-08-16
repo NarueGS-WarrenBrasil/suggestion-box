@@ -28,21 +28,25 @@
 
 <script lang="ts">
 import { Component, Vue, Emit, Prop } from "vue-property-decorator";
+import { ISuggestion } from "@/interfaces/index";
 @Component({})
 export default class DatailModal extends Vue {
   @Prop({
     type: Object,
     required: true,
   })
-  public suggestion!: object;
+  public suggestion!: ISuggestion;
 
   @Emit("close")
   public closeDetail() {
     return;
   }
-  close() {
+  close(): void {
     this.closeDetail();
   }
+  created() {
+    console.log("a");
+  },
 }
 </script>
 
